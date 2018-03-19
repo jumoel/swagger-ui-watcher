@@ -14,6 +14,7 @@ var io = require('socket.io')(server);
 var watch = require('node-watch');
 var yaml = require('js-yaml');
 
+const rw = require('rw');
 const RefParser = require('json-schema-ref-parser');
 
 function bundle(swaggerFile) {
@@ -88,12 +89,11 @@ function build(swaggerFile, targetDir, bundleTo) {
 		function(bundled) {
 			var bundleString = JSON.stringify(bundled, null, 2);
 			if (typeof bundleTo === 'string') {
-				fs.writeFile(bundleTo, bundleString, function(err) {
+				rw.dash.writeFile(bundleTo, bundleString, function(err) {
 					if (err) {
 						io.sockets.emit('showError', err);
 						return;
 					}
-					console.log('Saved bundle file at ' + bundleTo);
 				});
 			}
 		},
